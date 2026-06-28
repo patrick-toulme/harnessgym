@@ -1,0 +1,33 @@
+{
+  "name": "tensor_plan_attempt1_best",
+  "source": "HarnessGym iteration 1 timed-out broad biased sweep",
+  "objective_metric": "best_cycles",
+  "mode": "dev",
+  "observed_dev_best_cycles": 277305,
+  "observed_final_best_cycles": 1526080,
+  "notes": [
+    "Useful as a strong starting candidate, not a global optimum.",
+    "Keeps correctness passing in both dev and final modes in the deterministic benchmark model."
+  ],
+  "plan": {
+    "block_m": 48,
+    "block_n": 96,
+    "block_k": 64,
+    "num_warps": 4,
+    "vector_width": 16,
+    "q_layout": "swizzled_mn",
+    "k_layout": "swizzled_nk",
+    "v_layout": "swizzled_kd",
+    "o_layout": "streamed",
+    "accum": "tree",
+    "softmax": "online_renorm",
+    "dma_stages": 3,
+    "prefetch_distance": 3,
+    "dma_burst": 128,
+    "split_k": 1,
+    "swizzle": "tensorcore",
+    "schedule": "persistent",
+    "epilogue": "fused_scale_mask",
+    "scratchpad_kb": 128
+  }
+}

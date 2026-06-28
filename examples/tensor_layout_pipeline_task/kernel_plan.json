@@ -1,0 +1,21 @@
+{
+  "block_m": 16,
+  "block_n": 32,
+  "block_k": 32,
+  "num_warps": 2,
+  "vector_width": 4,
+  "q_layout": "row_major",
+  "k_layout": "row_major",
+  "v_layout": "row_major",
+  "o_layout": "row_major",
+  "accum": "scalar",
+  "softmax": "exact",
+  "dma_stages": 1,
+  "prefetch_distance": 0,
+  "dma_burst": 32,
+  "split_k": 1,
+  "swizzle": "none",
+  "schedule": "serial",
+  "epilogue": "store_plain",
+  "scratchpad_kb": 32
+}

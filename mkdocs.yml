@@ -1,0 +1,93 @@
+site_name: HarnessGym
+site_url: https://harnessgym.com
+site_description: Iterative agent harness improvement — run a coding agent on a hard task, generate the reusable tooling it was missing, then replay the next fresh session with that tooling activated.
+repo_url: https://github.com/patrick-toulme/harnessgym
+repo_name: patrick-toulme/harnessgym
+
+theme:
+  name: material
+  logo: assets/harnessgym-logo.png
+  favicon: assets/harnessgym.png
+  features:
+    - navigation.instant
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - content.code.annotate
+    - search.suggest
+    - search.highlight
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+nav:
+  - HarnessGym:
+      - Home: index.md
+      - How It Works: how-it-works.md
+      - Results: results.md
+      - Philosophy: philosophy.md
+      - Install: install.md
+      - Getting Started: getting-started.md
+  - CLI Reference: cli.md
+  - Concepts:
+      - Artifacts & Registry: concepts/artifacts.md
+      - Qualification: concepts/qualification.md
+      - Activation: concepts/activation.md
+      - Replay & Compare: concepts/compare.md
+      - MCP Telemetry: concepts/telemetry.md
+  - Runners:
+      - Overview: runners/index.md
+      - Codex (exec): runners/codex.md
+      - Claude Code: runners/claude.md
+      - Fake & tui-goal: runners/fake.md
+  - Examples: examples/index.md
+  - Experiments:
+      - Overview: experiments/index.md
+      - Tensor Layout Qualification: experiments/tensor-layout-qualification-2026-05-19.md
+      - Claude Code Runner: experiments/claude-code-runner-2026-05-20.md
+      - Claude MCP Telemetry: experiments/claude-mcp-tool-telemetry-2026-05-23.md
+      - CPU MoE Real Smoke: experiments/cpu-moe-real-smoke-2026-05-24.md
+      - H100 Triton RMSNorm: experiments/h100-triton-rmsnorm-2026-05-26.md
+      - H100 Triton RMSNorm (Long): experiments/h100-triton-rmsnorm-long-2026-05-27.md
+
+plugins:
+  - search
+  - social:
+      cards_layout_options:
+        background_color: "#061935"
+        color: "#ffffff"
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+extra_css:
+  - assets/extra.css

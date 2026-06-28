@@ -1,0 +1,77 @@
+/* HarnessGym brand palette mapped onto Material's "custom" theme.
+   Carried over from the original static site:
+     navy  #061935   blue #0875e1   cyan #16b8d9   green #14866d */
+
+:root {
+  --hg-navy: #061935;
+  --hg-blue: #0875e1;
+  --hg-cyan: #16b8d9;
+  --hg-green: #14866d;
+}
+
+/* Light mode -------------------------------------------------------------- */
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: var(--hg-navy);
+  --md-primary-fg-color--light: #0d2a52;
+  --md-primary-fg-color--dark: #040f22;
+  --md-primary-bg-color: #ffffff;
+  --md-primary-bg-color--light: #e9eef6;
+
+  --md-accent-fg-color: var(--hg-blue);
+  --md-accent-fg-color--transparent: rgba(8, 117, 225, 0.1);
+
+  --md-typeset-a-color: var(--hg-blue);
+}
+
+/* Dark mode (slate) ------------------------------------------------------- */
+[data-md-color-scheme="slate"] {
+  --md-hue: 220;
+  --md-primary-fg-color: #0a213f;
+  --md-primary-fg-color--light: #123154;
+  --md-primary-fg-color--dark: #050f1f;
+  --md-accent-fg-color: var(--hg-cyan);
+  --md-accent-fg-color--transparent: rgba(22, 184, 217, 0.12);
+  --md-typeset-a-color: #5bb6f0;
+}
+
+/* The wordmark logo carries the brand, so hide Material's duplicate
+   site_name text next to it in the header. */
+.md-header__title {
+  display: none;
+}
+
+/* Enlarge the header logo to fill the bar (header content is ~2.4rem tall). */
+.md-header__button.md-logo {
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+}
+
+.md-header__button.md-logo img {
+  height: 2rem;
+  width: auto;
+}
+
+/* Tighten the home-page hero logo. */
+.md-typeset p > img[alt="HarnessGym"] {
+  margin: 1.2rem auto 0.4rem;
+}
+
+/* "grid cards" used on the home page. */
+.md-typeset .grid.cards > ul > li {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.5rem;
+  transition: border-color 120ms, box-shadow 120ms;
+}
+
+.md-typeset .grid.cards > ul > li:hover {
+  border-color: var(--md-accent-fg-color);
+  box-shadow: 0 4px 18px rgba(6, 25, 53, 0.12);
+}
+
+/* Make the green check / red cross in is/isn't sections read clearly. */
+.md-typeset .twemoji.hg-yes svg {
+  fill: var(--hg-green);
+}
+.md-typeset .twemoji.hg-no svg {
+  fill: #c2354a;
+}
