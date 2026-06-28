@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "harnessgym"
+version = "0.1.1"
+description = "Iterative agent harness improvement framework for Codex."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Patrick Toulme" }]
+license = "Apache-2.0"
+keywords = ["agents", "benchmarking", "codex", "harness", "mcp", "testing"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: Software Development :: Testing",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/patrick-toulme/harnessgym"
+Repository = "https://github.com/patrick-toulme/harnessgym"
+Issues = "https://github.com/patrick-toulme/harnessgym/issues"
+
+[project.optional-dependencies]
+dev = ["build>=1", "pytest>=7", "twine>=5"]
+docs = ["mkdocs-material[imaging]>=9.5", "pymdown-extensions>=10"]
+
+[project.scripts]
+harnessgym = "harnessgym.cli:main"
+harnessgym-mcp-call = "harnessgym.mcp_client:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

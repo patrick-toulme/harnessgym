@@ -1,0 +1,62 @@
+{
+  "artifacts": [
+    {
+      "created_at": "2026-05-27T00:52:20+00:00",
+      "description": "Skill entrypoint for H100 RMSNorm optimization with remote H100 health preflight, guarded final verification, joint source-plus-launch search, exact/approximation SiLU sweeps, repeated final scoring, and launch-sweep cautions",
+      "id": "skill:.harnessgym/skills/h100-triton-rmsnorm/SKILL.md",
+      "iteration": 4,
+      "kind": "skill",
+      "metadata": {
+        "qualification": {
+          "iteration": 4,
+          "report_path": "docs/experiments/h100-triton-rmsnorm-long-2026-05-27.md#artifact-qualification",
+          "status": "passed",
+          "updated_at": "2026-05-27T02:53:56+00:00"
+        },
+        "source": "iteration-4-remote-health-preflight"
+      },
+      "path": ".harnessgym/skills/h100-triton-rmsnorm/SKILL.md"
+    },
+    {
+      "created_at": "2026-05-27T00:52:20+00:00",
+      "description": "H100 Triton RMSNorm MCP harness with remote H100 health preflight, objective runner, guarded rollback verification, launch override sweeps, rollback-safe exact, approximate, and joint source-plus-launch search, repeated objective scoring, diagnostics, history ranking, and numerical probes",
+      "id": "mcp:.harnessgym/mcp/h100_triton_rmsnorm/harnessgym-mcp.json",
+      "iteration": 4,
+      "kind": "mcp",
+      "metadata": {
+        "qualification": {
+          "iteration": 4,
+          "report_path": "docs/experiments/h100-triton-rmsnorm-long-2026-05-27.md#artifact-qualification",
+          "status": "passed",
+          "updated_at": "2026-05-27T02:53:56+00:00"
+        },
+        "source": "iteration-4-remote-health-preflight"
+      },
+      "path": ".harnessgym/mcp/h100_triton_rmsnorm/harnessgym-mcp.json"
+    },
+    {
+      "created_at": "2026-05-27T00:52:20+00:00",
+      "description": "Portable MCP framing, notification, tool-call, error-path, remote health preflight, rollback, joint source-plus-launch search, exact/approximate SiLU sweep, repeated objective, guarded verification, launch-sweep, manifest, and numerical tests",
+      "id": "test:.harnessgym/tests/test_h100_triton_mcp.py",
+      "iteration": 4,
+      "kind": "test",
+      "metadata": {
+        "qualification": {
+          "iteration": 4,
+          "report_path": "docs/experiments/h100-triton-rmsnorm-long-2026-05-27.md#artifact-qualification",
+          "status": "passed",
+          "updated_at": "2026-05-27T02:53:56+00:00"
+        },
+        "source": "iteration-4-remote-health-preflight"
+      },
+      "path": ".harnessgym/tests/test_h100_triton_mcp.py"
+    }
+  ],
+  "metadata": {
+    "base_validation_note": "docs/experiments/h100-triton-rmsnorm-2026-05-26.md",
+    "source_experiment": "tmp/h100_triton_harness_long_20260527",
+    "validation_note": "docs/experiments/h100-triton-rmsnorm-long-2026-05-27.md"
+  },
+  "updated_at": "2026-05-27T02:53:56+00:00",
+  "version": 1
+}

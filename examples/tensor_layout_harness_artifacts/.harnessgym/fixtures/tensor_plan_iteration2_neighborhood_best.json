@@ -1,0 +1,34 @@
+{
+  "name": "tensor_plan_iteration2_neighborhood_best",
+  "source": "HarnessGym iteration 2 manual local neighborhood search around tensor_plan_attempt1_best",
+  "objective_metric": "best_cycles",
+  "mode": "dev",
+  "observed_dev_best_cycles": 262005,
+  "observed_final_best_cycles": 1495982,
+  "notes": [
+    "Fixture for testing and seeding the checkpoint-aware neighborhood optimizer.",
+    "Improves the attempt-1 fixture in the deterministic dev objective and preserves final-mode correctness.",
+    "Use as a seed or comparison point, not as proof of a global optimum."
+  ],
+  "plan": {
+    "block_m": 48,
+    "block_n": 96,
+    "block_k": 64,
+    "num_warps": 6,
+    "vector_width": 16,
+    "q_layout": "swizzled_mn",
+    "k_layout": "swizzled_nk",
+    "v_layout": "swizzled_kd",
+    "o_layout": "streamed",
+    "accum": "tree",
+    "softmax": "online_renorm",
+    "dma_stages": 3,
+    "prefetch_distance": 3,
+    "dma_burst": 128,
+    "split_k": 1,
+    "swizzle": "tensorcore",
+    "schedule": "persistent",
+    "epilogue": "fused_scale",
+    "scratchpad_kb": 96
+  }
+}
