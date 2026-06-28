@@ -1,0 +1,41 @@
+{
+  "name": "h100-triton-rmsnorm-harness",
+  "command": "python3",
+  "args": [
+    "server.py",
+    "--workspace",
+    "../../.."
+  ],
+  "cwd": ".harnessgym/mcp/h100_triton_rmsnorm",
+  "enabled_tools": [
+    "inspect_context",
+    "remote_health_check",
+    "run_objective",
+    "sweep_kernel_config",
+    "restore_best_checkpoint",
+    "guarded_final_verify",
+    "sweep_launch_overrides",
+    "sweep_silu_variants",
+    "probe_silu_approximations",
+    "sweep_silu_approximations",
+    "joint_source_launch_search",
+    "repeat_objective",
+    "recommend_next_experiments",
+    "rank_history",
+    "diagnose_source",
+    "numerical_probe",
+    "update_result_json"
+  ],
+  "timeouts": {
+    "startup_seconds": 10,
+    "tool_seconds": 300
+  },
+  "self_test": {
+    "command": [
+      "python3",
+      "server.py",
+      "--self-test"
+    ],
+    "timeout_seconds": 30
+  }
+}

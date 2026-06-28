@@ -1,0 +1,9 @@
+{
+  "route_mode": "token",
+  "hidden_tile": 16,
+  "output_tile": 8,
+  "input_unroll": 1,
+  "hidden_unroll": 1,
+  "prefetch": 0,
+  "zero_mode": "memset"
+}

@@ -1,0 +1,85 @@
+{
+  "artifacts": [
+    {
+      "created_at": "2026-05-19T03:57:54+00:00",
+      "description": "Tensor plan optimizer skill with bounded sweep workflow, dev/final metrics, traps, and next-search guidance.",
+      "id": "skill:.harnessgym/skills/tensor-plan-optimizer/SKILL.md",
+      "iteration": 3,
+      "kind": "skill",
+      "metadata": {
+        "qualification": {
+          "status": "passed",
+          "updated_at": "2026-05-19T04:19:24+00:00"
+        },
+        "source": "verified-tensor-layout-experiment"
+      },
+      "path": ".harnessgym/skills/tensor-plan-optimizer/SKILL.md"
+    },
+    {
+      "created_at": "2026-05-19T03:57:54+00:00",
+      "description": "Hardened tensor-plan MCP with Content-Length self-test coverage and bounded_exhaustive_search profiles for dev-core and layout-relaxed sweeps.",
+      "id": "mcp:.harnessgym/mcp/tensor-plan-server/harnessgym-mcp.json",
+      "iteration": 3,
+      "kind": "mcp",
+      "metadata": {
+        "qualification": {
+          "status": "passed",
+          "updated_at": "2026-05-19T04:19:24+00:00"
+        },
+        "source": "verified-tensor-layout-experiment"
+      },
+      "path": ".harnessgym/mcp/tensor-plan-server/harnessgym-mcp.json"
+    },
+    {
+      "created_at": "2026-05-19T03:57:54+00:00",
+      "description": "Best tensor layout plan fixture from the first search iteration.",
+      "id": "fixture:.harnessgym/fixtures/tensor_plan_attempt1_best.json",
+      "iteration": 1,
+      "kind": "fixture",
+      "metadata": {
+        "qualification": {
+          "status": "passed",
+          "updated_at": "2026-05-19T04:19:24+00:00"
+        },
+        "source": "verified-tensor-layout-experiment"
+      },
+      "path": ".harnessgym/fixtures/tensor_plan_attempt1_best.json"
+    },
+    {
+      "created_at": "2026-05-19T04:09:33+00:00",
+      "description": "Best tensor layout plan fixture from the second neighborhood-search iteration.",
+      "id": "fixture:.harnessgym/fixtures/tensor_plan_iteration2_neighborhood_best.json",
+      "iteration": 2,
+      "kind": "fixture",
+      "metadata": {
+        "qualification": {
+          "status": "passed",
+          "updated_at": "2026-05-19T04:19:24+00:00"
+        },
+        "source": "verified-tensor-layout-experiment"
+      },
+      "path": ".harnessgym/fixtures/tensor_plan_iteration2_neighborhood_best.json"
+    },
+    {
+      "created_at": "2026-05-19T03:57:54+00:00",
+      "description": "Deterministic MCP self-test covering Content-Length framing, bounded_exhaustive_search success/error paths, rollback-safe mutation, and numerical dev/final checks.",
+      "id": "test:.harnessgym/tests/test_tensor_plan_mcp.py",
+      "iteration": 3,
+      "kind": "test",
+      "metadata": {
+        "qualification": {
+          "status": "passed",
+          "updated_at": "2026-05-19T04:19:24+00:00"
+        },
+        "source": "verified-tensor-layout-experiment"
+      },
+      "path": ".harnessgym/tests/test_tensor_plan_mcp.py"
+    }
+  ],
+  "metadata": {
+    "source_experiment": "tmp/tensor_layout_qual_exp_20260518232349",
+    "validation_note": "docs/experiments/claude-code-runner-2026-05-20.md"
+  },
+  "updated_at": "2026-05-19T04:19:24+00:00",
+  "version": 1
+}

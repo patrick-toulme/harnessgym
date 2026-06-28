@@ -1,0 +1,33 @@
+{
+  "name": "tensor-plan-server",
+  "description": "HarnessGym MCP server for tensor layout plan validation, trace analysis, rollback-safe search, candidate application, history comparison, and experiment ranking.",
+  "command": "python3",
+  "args": [
+    ".harnessgym/mcp/tensor-plan-server/tensor_plan_server.py"
+  ],
+  "cwd": ".",
+  "transport": "stdio",
+  "enabled_tools": [
+    "run_objective",
+    "benchmark_plan",
+    "validate_plan",
+    "numerical_check",
+    "trace_summary",
+    "search_plans",
+    "apply_candidate",
+    "compare_history",
+    "rank_next_experiments",
+    "local_neighborhood_search",
+    "bounded_exhaustive_search",
+    "apply_best_verified",
+    "candidate_diff",
+    "export_candidate_fixture",
+    "resume_search_history"
+  ],
+  "timeouts": {
+    "startup_seconds": 10,
+    "tool_seconds": 180,
+    "self_test_seconds": 60
+  },
+  "self_test": true
+}

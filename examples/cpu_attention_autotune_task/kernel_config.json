@@ -1,0 +1,15 @@
+{
+  "tile_m": 16,
+  "tile_n": 16,
+  "vector_width": 4,
+  "unroll_q": 1,
+  "unroll_k": 1,
+  "prefetch": 0,
+  "pipeline_stages": 1,
+  "layout": "row",
+  "accum": "scalar",
+  "exp": "libm",
+  "store": "plain",
+  "pack": false,
+  "split_k": 1
+}

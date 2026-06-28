@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.venv/
+tmp/
+flash_bench*
+.harnessgym_build/
+site/
+.cache/
