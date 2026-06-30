@@ -11,7 +11,7 @@ from pathlib import Path
 from harnessgym.artifacts import read_json, update_result
 from harnessgym.config import RunConfig
 from harnessgym.models import IterationContext, RunnerResult
-from harnessgym.orchestrator import Orchestrator, _contains_usage_token
+from harnessgym.orchestrator import Orchestrator, _contains_artifact_reference, _contains_usage_token
 from harnessgym.runners.base import Runner
 from harnessgym.runners.fake_runner import FakeRunner
 
@@ -375,6 +375,19 @@ class ContainsUsageTokenTests(unittest.TestCase):
 
     def test_artifact_path_basename_matches_near_tool(self) -> None:
         self.assertTrue(_contains_usage_token("used tool from .harnessgym/mcp/kernel-tools", ".harnessgym/mcp/kernel-tools"))
+
+
+class ContainsArtifactReferenceTests(unittest.TestCase):
+    def test_exact_artifact_path_matches_without_tool_context(self) -> None:
+        self.assertTrue(
+            _contains_artifact_reference(
+                "I used .harnessgym/skills/foo/SKILL.md during the attempt.",
+                ".harnessgym/skills/foo/SKILL.md",
+            )
+        )
+
+    def test_artifact_basename_matches_without_tool_context(self) -> None:
+        self.assertTrue(_contains_artifact_reference("I read SKILL.md during the attempt.", ".harnessgym/skills/foo/SKILL.md"))
 
 
 if __name__ == "__main__":

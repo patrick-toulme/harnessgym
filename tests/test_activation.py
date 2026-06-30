@@ -233,7 +233,7 @@ class ActivationTests(unittest.TestCase):
             config = (workspace / ".codex" / "config.toml").read_text(encoding="utf-8")
             self.assertIn(f'cwd = "{workspace}"', config)
 
-    def test_replace_symlink_replaces_stale_real_directory(self) -> None:
+    def test_replace_symlink_preserves_preexisting_real_directory(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             link_path = root / "skill_link"
@@ -245,10 +245,9 @@ class ActivationTests(unittest.TestCase):
 
             _replace_symlink(link_path, target)
 
-            self.assertTrue(link_path.is_symlink())
-            self.assertEqual(Path(os.readlink(link_path)), target)
-            self.assertTrue((link_path / "NEW.txt").exists())
-            self.assertFalse((link_path / "OLD.txt").exists())
+            self.assertFalse(link_path.is_symlink())
+            self.assertTrue((link_path / "OLD.txt").exists())
+            self.assertFalse((link_path / "NEW.txt").exists())
 
     def test_replace_symlink_replaces_stale_real_file(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

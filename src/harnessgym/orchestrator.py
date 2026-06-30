@@ -868,9 +868,18 @@ def _infer_harness_usage_from_outputs(
     artifacts = sorted(
         artifact
         for artifact in artifact_paths
-        if artifact and _contains_usage_token(haystack, artifact)
+        if artifact and _contains_artifact_reference(haystack, artifact)
     )
     return {"tools": tools, "artifacts": artifacts, "sources": sources}
+
+
+def _contains_artifact_reference(haystack: str, path: str) -> bool:
+    haystack = haystack.lower()
+    normalized = path.lower()
+    if normalized in haystack:
+        return True
+    basename = normalized.rsplit("/", 1)[-1]
+    return bool(basename and basename != normalized and basename in haystack)
 
 
 def _contains_usage_token(haystack: str, token: str) -> bool:

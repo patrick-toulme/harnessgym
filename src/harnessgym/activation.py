@@ -5,7 +5,6 @@ import os
 import re
 import select
 import shlex
-import shutil
 import subprocess
 import sys
 import time
@@ -100,7 +99,7 @@ def _replace_symlink(link_path: Path, target: Path) -> None:
             return
         link_path.unlink()
     elif link_path.is_dir():
-        shutil.rmtree(link_path)
+        return
     elif link_path.exists():
         link_path.unlink()
     os.symlink(target, link_path, target_is_directory=target.is_dir())
