@@ -127,12 +127,7 @@ def _failed_artifact_paths(activation: dict[str, Any], registry: Registry) -> li
             continue
         if server.get("active") is False and server.get("artifact_path"):
             paths.append(str(server["artifact_path"]))
-    if paths:
-        return sorted(dict.fromkeys(paths))
-    gate = activation.get("quality_gate") if isinstance(activation, dict) else {}
-    if isinstance(gate, dict) and gate.get("status") == "failed":
-        return sorted(artifact.path for artifact in registry.artifacts)
-    return []
+    return sorted(dict.fromkeys(paths))
 
 
 def _iter_copyable_paths(root: Path) -> list[Path]:
