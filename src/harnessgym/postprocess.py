@@ -64,7 +64,7 @@ def post_command_passed(result: dict[str, Any]) -> bool:
         return False
     payload = result.get("json")
     if not isinstance(payload, dict):
-        return True
+        return False
     payload_status = payload.get("status")
     if payload_status is None:
         return True
