@@ -99,8 +99,10 @@ def _replace_symlink(link_path: Path, target: Path) -> None:
         if Path(os.readlink(link_path)) == target:
             return
         link_path.unlink()
-    elif link_path.exists():
+    elif link_path.is_dir():
         shutil.rmtree(link_path)
+    elif link_path.exists():
+        link_path.unlink()
     os.symlink(target, link_path, target_is_directory=target.is_dir())
 
 

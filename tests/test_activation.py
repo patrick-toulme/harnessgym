@@ -250,6 +250,21 @@ class ActivationTests(unittest.TestCase):
             self.assertTrue((link_path / "NEW.txt").exists())
             self.assertFalse((link_path / "OLD.txt").exists())
 
+    def test_replace_symlink_replaces_stale_real_file(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            link_path = root / "skill_link"
+            link_path.write_text("old", encoding="utf-8")
+            target = root / "new_target"
+            target.mkdir()
+            (target / "NEW.txt").write_text("new", encoding="utf-8")
+
+            _replace_symlink(link_path, target)
+
+            self.assertTrue(link_path.is_symlink())
+            self.assertEqual(Path(os.readlink(link_path)), target)
+            self.assertTrue((link_path / "NEW.txt").exists())
+
     def test_smoke_mcp_server_uses_configured_startup_timeout(self) -> None:
         # A slow server that sleeps past the default 3s but within a configured
         # startup_timeout_sec should pass smoke when the configured timeout is used.
