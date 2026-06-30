@@ -5,21 +5,9 @@ from pathlib import Path
 from typing import Any
 
 from .activation import activate_generated_harness
-from .artifacts import ARTIFACT_DIRS, write_json
+from .artifacts import ARTIFACT_DIRS, EXCLUDED_TEMPLATE_NAMES, EXCLUDED_TEMPLATE_SUFFIXES, write_json
 from .models import Registry, utc_now
 from .registry import load_registry
-
-
-EXCLUDED_TEMPLATE_NAMES = {
-    ".agents",
-    ".codex",
-    ".git",
-    ".harnessgym",
-    ".harnessgym_build",
-    ".pytest_cache",
-    "__pycache__",
-}
-EXCLUDED_TEMPLATE_SUFFIXES = {".o", ".pyc", ".pyo", ".so", ".dylib"}
 
 
 def capture_clean_workspace_template(workspace: Path, destination: Path) -> dict[str, Any]:

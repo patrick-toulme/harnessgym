@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
@@ -874,10 +875,34 @@ def _infer_harness_usage_from_outputs(
 
 def _contains_usage_token(haystack: str, token: str) -> bool:
     normalized = token.lower()
-    if normalized in haystack:
+    # Match MCP tool-call patterns or word-boundary occurrences rather than
+    # bare substring presence to avoid false positives like "I will run the
+    # tests" matching tool "run".
+    # Patterns: mcp__server__tool, "tools/call" with "name":"tool", or the
+    # tool name as a whole word near "tool" context.
+    if f"mcp__{normalized}" in haystack:
+        return True
+    if f"__{normalized}" in haystack and "mcp__" in haystack:
+        return True
+    if f'"{normalized}"' in haystack and "tools/call" in haystack:
         return True
     basename = normalized.rsplit("/", 1)[-1]
-    return bool(basename and basename != normalized and basename in haystack)
+    candidates = [normalized] if basename == normalized else [normalized, basename]
+    for candidate in candidates:
+        if not candidate:
+            continue
+        if f"mcp__{candidate}" in haystack:
+            return True
+        if f"__{candidate}" in haystack and "mcp__" in haystack:
+            return True
+        if f'"{candidate}"' in haystack and "tools/call" in haystack:
+            return True
+        # Word-boundary match near "tool" keyword context (e.g. "MCP tool run_verifier").
+        for match in re.finditer(rf"\b{re.escape(candidate)}\b", haystack):
+            window = haystack[max(0, match.start() - 30) : match.end() + 30]
+            if "tool" in window:
+                return True
+    return False
 
 
 def _qualification_summary(report: dict[str, Any]) -> dict[str, Any]:

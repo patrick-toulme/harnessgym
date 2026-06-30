@@ -4,20 +4,10 @@ import shutil
 from pathlib import Path
 from typing import Any
 
+from .artifacts import EXCLUDED_TEMPLATE_NAMES as EXCLUDED_CHECKPOINT_NAMES
+from .artifacts import EXCLUDED_TEMPLATE_SUFFIXES as EXCLUDED_CHECKPOINT_SUFFIXES
 from .artifacts import write_json
 from .models import utc_now
-
-
-EXCLUDED_CHECKPOINT_NAMES = {
-    ".agents",
-    ".codex",
-    ".git",
-    ".harnessgym",
-    ".harnessgym_build",
-    ".pytest_cache",
-    "__pycache__",
-}
-EXCLUDED_CHECKPOINT_SUFFIXES = {".o", ".pyc", ".pyo", ".so"}
 
 
 class BestCheckpointManager:

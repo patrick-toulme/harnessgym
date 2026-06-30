@@ -20,6 +20,18 @@ ARTIFACT_DIRS = {
     "script": "scripts",
 }
 
+EXCLUDED_TEMPLATE_NAMES = {
+    ".agents",
+    ".claude",
+    ".codex",
+    ".git",
+    ".harnessgym",
+    ".harnessgym_build",
+    ".pytest_cache",
+    "__pycache__",
+}
+EXCLUDED_TEMPLATE_SUFFIXES = {".o", ".pyc", ".pyo", ".so", ".dylib"}
+
 
 def ensure_harness_dirs(workspace: Path) -> Path:
     harness_dir = workspace / ".harnessgym"
@@ -52,10 +64,15 @@ def write_json(path: Path, data: dict) -> None:
     path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
+_ARRAY_UNION_KEYS = {"used_harness_tools", "used_harness_artifacts"}
+
+
 def deep_merge(base: dict, updates: dict) -> dict:
     merged = dict(base)
     for key, value in updates.items():
-        if isinstance(value, dict) and isinstance(merged.get(key), dict):
+        if key in _ARRAY_UNION_KEYS and isinstance(value, list) and isinstance(merged.get(key), list):
+            merged[key] = sorted(dict.fromkeys([*merged[key], *value]))
+        elif isinstance(value, dict) and isinstance(merged.get(key), dict):
             merged[key] = deep_merge(merged[key], value)
         else:
             merged[key] = value

@@ -5,6 +5,7 @@ import os
 import re
 import select
 import shlex
+import shutil
 import subprocess
 import sys
 import time
@@ -99,7 +100,7 @@ def _replace_symlink(link_path: Path, target: Path) -> None:
             return
         link_path.unlink()
     elif link_path.exists():
-        return
+        shutil.rmtree(link_path)
     os.symlink(target, link_path, target_is_directory=target.is_dir())
 
 
@@ -120,7 +121,7 @@ def _activate_mcp_servers(workspace: Path, registry: Registry, report: dict[str,
             continue
         if server["name"] in servers_by_name:
             continue
-        server["smoke"] = _smoke_mcp_server(server)
+        server["smoke"] = _smoke_mcp_server(server, timeout_seconds=float(server.get("startup_timeout_sec", 10)))
         if server["smoke"].get("status") != "passed":
             report["warnings"].append(f"mcp smoke failed for {server['name']}: {server['smoke'].get('message')}")
         server["self_test"] = _run_mcp_self_test(server)
