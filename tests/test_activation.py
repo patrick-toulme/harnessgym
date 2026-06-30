@@ -312,3 +312,49 @@ class ActivationTests(unittest.TestCase):
             self.assertEqual(result["status"], "passed")
             # With the old hardcoded 3s default, it would also pass here (2s sleep),
             # but the point is the configured value is now respected.
+
+    def test_smoke_mcp_server_uses_tool_timeout_for_tools_list(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            slow_tools_server = root / "slow_tools_server.py"
+            slow_tools_server.write_text(
+                "\n".join(
+                    [
+                        "import json, sys, time",
+                        "def read_msg():",
+                        "    headers = {}",
+                        "    while True:",
+                        "        line = sys.stdin.buffer.readline()",
+                        "        if line in (b'\\r\\n', b'\\n', b''): break",
+                        "        k,_,v = line.decode('ascii').partition(':')",
+                        "        headers[k.lower()] = v.strip()",
+                        "    length = int(headers.get('content-length','0'))",
+                        "    return json.loads(sys.stdin.buffer.read(length).decode('utf-8'))",
+                        "def write_msg(p):",
+                        "    body = json.dumps(p).encode('utf-8')",
+                        "    sys.stdout.buffer.write(f'Content-Length: {len(body)}\\r\\n\\r\\n'.encode('ascii') + body)",
+                        "    sys.stdout.buffer.flush()",
+                        "while True:",
+                        "    msg = read_msg()",
+                        "    if msg is None: break",
+                        "    if msg.get('method') == 'initialize':",
+                        "        write_msg({'jsonrpc':'2.0','id':msg.get('id'),'result':{'protocolVersion':'2024-11-05','capabilities':{'tools':{}},'serverInfo':{'name':'slow-tools','version':'1.0'}}})",
+                        "    elif msg.get('method') == 'tools/list':",
+                        "        time.sleep(2)",
+                        "        write_msg({'jsonrpc':'2.0','id':msg.get('id'),'result':{'tools':[{'name':'probe','description':'p','inputSchema':{'type':'object','properties':{}}}]}})",
+                        "",
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            server = {
+                "name": "slow-tools",
+                "command": sys.executable,
+                "args": [str(slow_tools_server)],
+                "cwd": str(root),
+            }
+
+            result = _smoke_mcp_server(server, timeout_seconds=1, tool_timeout_seconds=5)
+
+            self.assertEqual(result["status"], "passed")
+            self.assertEqual(result["tools"], ["probe"])
