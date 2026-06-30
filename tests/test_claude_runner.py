@@ -130,6 +130,48 @@ class ClaudeRunnerTests(unittest.TestCase):
         self.assertEqual(parse_claude_result(text), payload)
         self.assertEqual(parse_claude_session_id(text), "44b64ca5-735d-4d10-8270-4aef483c00a1")
 
+    def test_parse_claude_result_prioritizes_result_over_system_in_jsonl(self) -> None:
+        # JSONL with [assistant, result, system] — reversed scan must pick
+        # the result message, not the trailing system/init message that also
+        # carries session_id.
+        jsonl = "\n".join(
+            [
+                json.dumps({"type": "assistant", "message": "working"}),
+                json.dumps(
+                    {
+                        "type": "result",
+                        "session_id": "abc-123",
+                        "result": "TASK SOLVED",
+                        "is_error": False,
+                    }
+                ),
+                json.dumps({"type": "system", "subtype": "init", "session_id": "xyz-456"}),
+            ]
+        )
+
+        parsed = parse_claude_result(jsonl)
+
+        self.assertIsNotNone(parsed)
+        assert parsed is not None
+        self.assertEqual(parsed["type"], "result")
+        self.assertEqual(parsed["session_id"], "abc-123")
+        self.assertEqual(parsed["result"], "TASK SOLVED")
+
+    def test_parse_claude_result_falls_back_to_session_id_when_no_result_type(self) -> None:
+        # When no type=="result" line exists, fall back to session_id match.
+        jsonl = "\n".join(
+            [
+                json.dumps({"type": "assistant", "message": "working"}),
+                json.dumps({"type": "system", "subtype": "init", "session_id": "xyz-456"}),
+            ]
+        )
+
+        parsed = parse_claude_result(jsonl)
+
+        self.assertIsNotNone(parsed)
+        assert parsed is not None
+        self.assertEqual(parsed["session_id"], "xyz-456")
+
     def test_reflection_requires_session_id(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             workspace = Path(temp_dir)

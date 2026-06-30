@@ -35,7 +35,17 @@ def parse_claude_result(text: str) -> dict[str, Any] | None:
             payload = json.loads(line)
         except json.JSONDecodeError:
             continue
-        if isinstance(payload, dict) and (payload.get("session_id") or payload.get("type") == "result"):
+        if isinstance(payload, dict) and payload.get("type") == "result":
+            return payload
+    for line in reversed(stripped.splitlines()):
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            payload = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(payload, dict) and payload.get("session_id"):
             return payload
     return None
 
