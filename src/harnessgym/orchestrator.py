@@ -344,8 +344,6 @@ class Orchestrator:
     def _qualification_failed_paths(self, report: dict[str, Any], registry: Any, iteration: int) -> list[str]:
         paths = [str(path) for path in report.get("failed_artifacts", []) if path]
         paths.extend(str(artifact.path) for artifact in registry.artifacts if artifact.iteration == iteration)
-        if not paths and report.get("status") == "failed":
-            paths.extend(str(artifact.path) for artifact in registry.artifacts)
         return sorted(dict.fromkeys(paths))
 
     def _write_run_config(self, config: RunConfig) -> None:

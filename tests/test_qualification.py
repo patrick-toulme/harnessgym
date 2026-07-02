@@ -8,8 +8,9 @@ from pathlib import Path
 
 from harnessgym.artifacts import update_result
 from harnessgym.config import RunConfig
-from harnessgym.models import IterationContext, RunnerResult
+from harnessgym.models import Artifact, IterationContext, Registry, RunnerResult
 from harnessgym.orchestrator import Orchestrator
+from harnessgym.qualification import _failed_artifact_paths
 from harnessgym.registry import load_registry
 from harnessgym.runners.base import Runner
 
@@ -227,3 +228,53 @@ class QualificationTests(unittest.TestCase):
             self.assertGreaterEqual(len(runner.attempt_prompts), 2)
             self.assertIn("quarantined artifact(s) are hidden", runner.attempt_prompts[1])
             self.assertNotIn("- mcp: .harnessgym/mcp/ir-tools/harnessgym-mcp.json", runner.attempt_prompts[1])
+
+    def test_qualification_failed_paths_does_not_quarantine_prior_iteration_artifacts(self) -> None:
+        orchestrator = Orchestrator()
+        registry = Registry()
+        a1 = Artifact(
+            id="mcp:server1.py",
+            kind="mcp",
+            path=".harnessgym/mcp/server1.py",
+            description="iter1",
+            iteration=1,
+            metadata={"qualification": {"status": "passed", "iteration": 1}},
+        )
+        a2 = Artifact(
+            id="mcp:server2.py",
+            kind="mcp",
+            path=".harnessgym/mcp/server2.py",
+            description="iter2",
+            iteration=2,
+            metadata={},
+        )
+        registry.artifacts.extend([a1, a2])
+
+        # Case 1: iter-2 artifact exists, report failed with empty failed_artifacts.
+        # Only the iter-2 artifact should be returned; iter-1 preserved.
+        report = {"status": "failed", "failed_artifacts": [], "quality_gate": {"status": "failed"}}
+        failed = orchestrator._qualification_failed_paths(report, registry, iteration=2)
+        self.assertIn(".harnessgym/mcp/server2.py", failed)
+        self.assertNotIn(".harnessgym/mcp/server1.py", failed)
+
+        # Case 2: no iter-2 artifacts (build produced nothing), report failed.
+        # The fallback must NOT return all artifacts — return empty.
+        registry.artifacts = [a for a in registry.artifacts if a.iteration != 2]
+        failed = orchestrator._qualification_failed_paths(report, registry, iteration=2)
+        self.assertEqual(failed, [])
+        self.assertNotIn(".harnessgym/mcp/server1.py", failed)
+
+    def test_failed_artifact_paths_does_not_return_all_on_gate_failure(self) -> None:
+        # When the quality gate fails but no specific inactive server is identified,
+        # _failed_artifact_paths must return only the inactive servers, not all artifacts.
+        activation = {
+            "mcp_servers": [],
+            "quality_gate": {"status": "failed"},
+        }
+        registry = Registry()
+        registry.artifacts.extend([
+            Artifact(id="mcp:a", kind="mcp", path=".harnessgym/mcp/a.json", description="a", iteration=1, metadata={}),
+            Artifact(id="mcp:b", kind="mcp", path=".harnessgym/mcp/b.json", description="b", iteration=1, metadata={}),
+        ])
+        failed = _failed_artifact_paths(activation, registry)
+        self.assertEqual(failed, [])
