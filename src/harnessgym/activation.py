@@ -98,8 +98,10 @@ def _replace_symlink(link_path: Path, target: Path) -> None:
         if Path(os.readlink(link_path)) == target:
             return
         link_path.unlink()
-    elif link_path.exists():
+    elif link_path.is_dir():
         return
+    elif link_path.exists():
+        link_path.unlink()
     os.symlink(target, link_path, target_is_directory=target.is_dir())
 
 
@@ -120,7 +122,11 @@ def _activate_mcp_servers(workspace: Path, registry: Registry, report: dict[str,
             continue
         if server["name"] in servers_by_name:
             continue
-        server["smoke"] = _smoke_mcp_server(server)
+        server["smoke"] = _smoke_mcp_server(
+            server,
+            timeout_seconds=float(server.get("startup_timeout_sec", 10)),
+            tool_timeout_seconds=float(server.get("tool_timeout_sec", 60)),
+        )
         if server["smoke"].get("status") != "passed":
             report["warnings"].append(f"mcp smoke failed for {server['name']}: {server['smoke'].get('message')}")
         server["self_test"] = _run_mcp_self_test(server)
@@ -338,7 +344,11 @@ def _command_points_to_repo_local_path(workspace: Path, command: list[str]) -> b
     return False
 
 
-def _smoke_mcp_server(server: dict[str, Any], timeout_seconds: float = 3.0) -> dict[str, Any]:
+def _smoke_mcp_server(
+    server: dict[str, Any],
+    timeout_seconds: float = 3.0,
+    tool_timeout_seconds: float | None = None,
+) -> dict[str, Any]:
     command = [server["command"], *server.get("args", [])]
     try:
         process = subprocess.Popen(
@@ -369,7 +379,7 @@ def _smoke_mcp_server(server: dict[str, Any], timeout_seconds: float = 3.0) -> d
             return {"status": "failed", "message": "no initialize response"}
         _write_mcp_message(process, {"jsonrpc": "2.0", "method": "notifications/initialized", "params": {}})
         _write_mcp_message(process, {"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {}})
-        tools = _read_mcp_message(process, timeout_seconds)
+        tools = _read_mcp_message(process, tool_timeout_seconds if tool_timeout_seconds is not None else timeout_seconds)
         if tools is None:
             return {"status": "failed", "message": "no tools/list response"}
         tool_names = [

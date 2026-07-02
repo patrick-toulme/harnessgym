@@ -11,7 +11,7 @@ from pathlib import Path
 from harnessgym.artifacts import read_json, update_result
 from harnessgym.config import RunConfig
 from harnessgym.models import IterationContext, RunnerResult
-from harnessgym.orchestrator import Orchestrator
+from harnessgym.orchestrator import Orchestrator, _contains_artifact_reference, _contains_usage_token
 from harnessgym.runners.base import Runner
 from harnessgym.runners.fake_runner import FakeRunner
 
@@ -356,6 +356,38 @@ class PostAttemptTests(unittest.TestCase):
             self.assertIn("run_verifier", usage["inferred_harness_tools"])
             self.assertIn("run_verifier", usage["used_active_tools"])
             self.assertGreaterEqual(usage["inferred_tool_use_count"], 1)
+
+
+class ContainsUsageTokenTests(unittest.TestCase):
+    def test_prose_does_not_match_short_tool_name(self) -> None:
+        self.assertFalse(_contains_usage_token("i will run the tests", "run"))
+        self.assertFalse(_contains_usage_token("i will run the tests", "test"))
+
+    def test_mcp_pattern_matches(self) -> None:
+        self.assertTrue(_contains_usage_token("calling mcp__kernel-tools__run_verifier", "run_verifier"))
+
+    def test_tools_call_with_quoted_name_matches(self) -> None:
+        haystack = 'tools/call "run_verifier" with args'
+        self.assertTrue(_contains_usage_token(haystack, "run_verifier"))
+
+    def test_tool_name_near_tool_keyword_matches(self) -> None:
+        self.assertTrue(_contains_usage_token("I used the generated MCP tool run_verifier from .harnessgym/mcp/kernel-tools.", "run_verifier"))
+
+    def test_artifact_path_basename_matches_near_tool(self) -> None:
+        self.assertTrue(_contains_usage_token("used tool from .harnessgym/mcp/kernel-tools", ".harnessgym/mcp/kernel-tools"))
+
+
+class ContainsArtifactReferenceTests(unittest.TestCase):
+    def test_exact_artifact_path_matches_without_tool_context(self) -> None:
+        self.assertTrue(
+            _contains_artifact_reference(
+                "I used .harnessgym/skills/foo/SKILL.md during the attempt.",
+                ".harnessgym/skills/foo/SKILL.md",
+            )
+        )
+
+    def test_artifact_basename_matches_without_tool_context(self) -> None:
+        self.assertTrue(_contains_artifact_reference("I read SKILL.md during the attempt.", ".harnessgym/skills/foo/SKILL.md"))
 
 
 if __name__ == "__main__":

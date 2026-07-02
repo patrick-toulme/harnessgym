@@ -7,25 +7,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from .artifacts import ARTIFACT_DIRS, read_json, write_json
+from .artifacts import ARTIFACT_DIRS, EXCLUDED_TEMPLATE_NAMES, read_json, write_json
 from .config import RunConfig
 from .models import utc_now
 from .mcp_telemetry import summarize_mcp_call_events
 from .orchestrator import Orchestrator, extract_score
 from .postprocess import post_command_passed, run_post_command
 from .timeouts import parse_timeout
-
-
-EXCLUDED_TEMPLATE_NAMES = {
-    ".agents",
-    ".claude",
-    ".codex",
-    ".git",
-    ".harnessgym",
-    ".pytest_cache",
-    "__pycache__",
-}
-EXCLUDED_TEMPLATE_SUFFIXES = {".o", ".pyc", ".pyo"}
 
 
 @dataclass(frozen=True)
@@ -137,6 +125,9 @@ class CompareConfig:
             require_harness_tool_use=require_harness_tool_use,
             overwrite=overwrite,
         )
+
+
+EXCLUDED_COMPARE_TEMPLATE_SUFFIXES = {".o", ".pyc", ".pyo"}
 
 
 def run_compare(config: CompareConfig) -> dict[str, Any]:
@@ -355,7 +346,7 @@ def _template_ignore(directory: str, names: list[str]) -> set[str]:
         path = Path(directory) / name
         if name in EXCLUDED_TEMPLATE_NAMES:
             ignored.add(name)
-        elif path.is_file() and (path.suffix in EXCLUDED_TEMPLATE_SUFFIXES or name.startswith("flash_bench")):
+        elif path.is_file() and (path.suffix in EXCLUDED_COMPARE_TEMPLATE_SUFFIXES or name.startswith("flash_bench")):
             ignored.add(name)
     return ignored
 
